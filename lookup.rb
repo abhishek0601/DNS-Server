@@ -46,7 +46,7 @@ def resolve(dns_records, lookup_chain, domain)
   if result == nil
     lookup_chain = ["Error: record not found for #{domain}"]
   else
-    lookup_chain.push(lookup_result[:val])
+    lookup_chain.push(result[:val])
     lookup_chain = resolve(dns_records, lookup_chain, result[:val]) if result[:type] == "CNAME"
   end
 

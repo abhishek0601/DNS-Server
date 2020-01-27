@@ -32,10 +32,10 @@ def parse_dns(dns_raw)
     reject {|line| line.empty?}.
     reject {|line| line[0] == "#" }.
 
-    each do |line|
+    each{|line|
       info = line.split ","
       dns_records[info[1].strip] = { :type => info[0].strip, :val => info[2].strip }
-    end
+      }
   return dns_records
 end
 

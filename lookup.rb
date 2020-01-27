@@ -33,21 +33,21 @@ def parse_dns(dns_raw)
     reject {|line| line[0] == "#" }.
 
     each do |line|
-      data = line.split ","
-      dns_records[data[1].strip] = { :type => data[0].strip, :val => data[2].strip }
+      info = line.split ","
+      dns_records[info[1].strip] = { :type => info[0].strip, :val => info[2].strip }
     end
   return dns_records
 end
 
 def resolve(dns_records, lookup_chain, domain)
-  lookup_result = dns_records[domain]
+  result = dns_records[domain]
 
 
-  if lookup_result == nil
+  if result == nil
     lookup_chain = ["Error: record not found for #{domain}"]
   else
     lookup_chain.push(lookup_result[:val])
-    lookup_chain = resolve(dns_records, lookup_chain, lookup_result[:val]) if lookup_result[:type] == "CNAME"
+    lookup_chain = resolve(dns_records, lookup_chain, result[:val]) if result[:type] == "CNAME"
   end
 
   return lookup_chain

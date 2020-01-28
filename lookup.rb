@@ -1,13 +1,13 @@
 def get_command_line_argument
-  # ARGV is an array that Ruby defines for us,
-  # which contains all the arguments we passed to it
-  # when invoking the script from the command line.
-  # https://docs.ruby-lang.org/en/2.4.0/ARGF.html
-  if ARGV.empty?
-    puts "Usage: ruby lookup.rb <domain>"
-    exit
-  end
-  ARGV.first
+	# ARGV is an array that Ruby defines for us,
+	# which contains all the arguments we passed to it
+	# when invoking the script from the command line.
+	# https://docs.ruby-lang.org/en/2.4.0/ARGF.html
+	if ARGV.empty?
+		puts "Usage: ruby lookup.rb <domain>"
+		exit
+	end
+	ARGV.first
 end
 
 # `domain` contains the domain name we have to look up.
@@ -24,33 +24,33 @@ dns_raw = File.readlines("zone")
 # ..
 # ..
 def parse_dns(dns_raw)
-  dns_records = {}
+	dns_records = {}
 
 
-  dns_raw.
-    map{|line| line.strip }.
-    reject {|line| line.empty?}.
-    reject {|line| line[0] == "#" }.
+	dns_raw.
+	map{|line| line.strip }.
+	reject {|line| line.empty?}.
+	reject {|line| line[0] == "#" }.
 
-    each{|line|
-      info = line.split ","
-      dns_records[info[1].strip] = { :type => info[0].strip, :val => info[2].strip }
-      }
-  return dns_records
+	each{|line|
+		info = line.split ","
+		dns_records[info[1].strip] = { :type => info[0].strip, :val => info[2].strip }
+	}
+	return dns_records
 end
 
 def resolve(dns_records, lookup_chain, domain)
-  result = dns_records[domain]
+	result = dns_records[domain]
 
 
-  if result == nil
-    lookup_chain = ["Error: record not found for #{domain}"]
-  else
-    lookup_chain.push(result[:val])
-    lookup_chain = resolve(dns_records, lookup_chain, result[:val]) if result[:type] == "CNAME"
-  end
+	if result == nil
+		lookup_chain = ["Error: record not found for #{domain}"]
+	else
+		lookup_chain.push(result[:val])
+		lookup_chain = resolve(dns_records, lookup_chain, result[:val]) if result[:type] == "CNAME"
+	end
 
-  return lookup_chain
+	return lookup_chain
 end
 
 
@@ -60,4 +60,3 @@ end
 dns_records = parse_dns(dns_raw)
 lookup_chain = [domain]
 lookup_chain = resolve(dns_records, lookup_chain, domain)
-puts lookup_chain.join(" => ")

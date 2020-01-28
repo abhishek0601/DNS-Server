@@ -60,3 +60,4 @@ end
 dns_records = parse_dns(dns_raw)
 lookup_chain = [domain]
 lookup_chain = resolve(dns_records, lookup_chain, domain)
+puts lookup_chain.join(" => ")
